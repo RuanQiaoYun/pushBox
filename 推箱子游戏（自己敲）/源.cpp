@@ -88,7 +88,6 @@ void changeMap(POS* pos, PROP prop) {
 
 }
 
-
 void gameControl(DIRECTION direction) {
 	POS next_pos = man, next_next_pos = man;
 
@@ -160,12 +159,33 @@ void gameControl(DIRECTION direction) {
 
 }
 
+bool isGameOver() {
+	for (int i = 0;i < ROW;i++) {
+		for (int j = 0;j < COLUMN;j++) {
+			if (map[i][j] == BOX_DES) {
+				return false;
+			}
+		}
+	}
+	return true;
+}
+
+void gameOverScenes(IMAGE bg) {
+	
+	putimage(0, 0, &bg);
+
+	settextcolor(WHITE);
+	settextstyle(20, 0, "宋体");
+	outtextxy(SCREEN_WIDTH / 3.5, SCREEN_WIDTH / 2.5,
+		"恭喜你成为一名合格的推箱子老司机！");
+
+}
 int main(void) {
 	//建github仓库
 	initgraph(SCREEN_WIDTH, SCREEN_HEIGHT);
 
 	//加载背景图片
-	loadimage(&bg_img, "blackground.bmp", 0, 0, true);
+	loadimage(&bg_img, "blackground.bmp", SCREEN_WIDTH, SCREEN_HEIGHT, true);
 	//显示背景图片
 	putimage(0, 0, &bg_img);
 
@@ -215,10 +235,12 @@ int main(void) {
 			default:
 				break;
 			}
+			if (isGameOver()) {
+				gameOverScenes(bg_img);
+			}
 		}
 		//性能优化
 		Sleep(100);
-
 	} while (quit == false);
 
 
